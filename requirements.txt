@@ -1,0 +1,7 @@
+# Base de datos / ORM ligero
+# (sqlite3 viene incluido en Python, no requiere instalación)
+
+# Simulación de datos
+# faker opcional si quieren variables ambientales más realistas
+
+# Visualización en consola/local (ampliar según el integrante 4 decida: Flask, Streamlit, etc.)
