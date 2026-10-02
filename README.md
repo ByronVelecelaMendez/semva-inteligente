@@ -1,4 +1,4 @@
-﻿# SEMVA Inteligente
+# SEMVA Inteligente
 
 Sistema Embebido para el Monitoreo de Variables Ambientales (SEMVA), evolucionado
 para incorporar procesamiento y funciones inteligentes sobre las variables
@@ -25,13 +25,22 @@ decisiones en procesos agrícolas, en lugar de solo mostrarlos sin analizarlos.
                                            ↓
                                   Salida (pantalla / alertas)
 
+El proyecto separa el código en dos grandes bloques:
+
+- **backend/** — toda la lógica del sistema: adquisición de datos, procesamiento,
+  almacenamiento y generación de alertas. Es donde se adquiere, interpreta y
+  guarda la información.
+- **frontend/** — la capa de visualización, donde el usuario ve los resultados.
+  Hoy es una salida por consola; puede evolucionar a un dashboard web sin
+  afectar el backend.
+
 | Módulo | Carpeta | Responsable | Descripción |
 |---|---|---|---|
-| Adquisición de datos | `adquisicion/` | Del Pezo Rodríguez Julio José | Captura/simulación de variables ambientales (entrada). |
-| Procesamiento | `procesamiento/` | Dave Javier Carvajal González | Interpreta y analiza los datos (umbrales, reglas, promedios). |
-| Almacenamiento | `almacenamiento/` | Byron Andrés Velecela Méndez | Guarda el histórico de variables en base de datos. |
-| Visualización | `visualizacion/` | Mike Neiman Tomalá Tumbaco | Interfaz donde se muestran variables en tiempo real e históricas. |
-| Alertas / análisis inteligente | `alertas/` | Jean Pierre Correa Asencio | Detección de condiciones relevantes/anomalías y generación de alertas. |
+| Adquisición de datos | `backend/adquisicion/` | Del Pezo Rodríguez Julio José | Captura/simulación de variables ambientales (entrada). |
+| Procesamiento | `backend/procesamiento/` | Dave Javier Carvajal González | Interpreta y analiza los datos (umbrales, reglas, promedios). |
+| Almacenamiento | `backend/almacenamiento/` | Byron Andrés Velecela Méndez | Guarda el histórico de variables en base de datos. |
+| Visualización | `frontend/visualizacion/` | Mike Neiman Tomalá Tumbaco | Interfaz donde se muestran variables en tiempo real e históricas. |
+| Alertas / análisis inteligente | `backend/alertas/` | Jean Pierre Correa Asencio | Detección de condiciones relevantes/anomalías y generación de alertas. |
 
 ## Camino mínimo funcional (primer hito)
 
@@ -58,18 +67,21 @@ y se agregan las alertas/análisis inteligente.
 
 ## Ejecución del prototipo mínimo
 
-    python adquisicion/simulador_sensor.py
+    python backend\adquisicion\simulador_sensor.py
+    python frontend\visualizacion\dashboard.py
 
 ## Estructura del repositorio
 
     semva-inteligente/
-    ├── adquisicion/        # Captura/simulación de sensores (entrada)
-    ├── procesamiento/      # Lógica de interpretación y análisis
-    ├── almacenamiento/     # Base de datos / histórico
-    ├── visualizacion/      # Interfaz de visualización
-    ├── alertas/             # Detección de condiciones y alertas
-    ├── docs/                # Documentación, talleres, esquemas
-    ├── tests/                # Pruebas
+    ├── backend/
+    │   ├── adquisicion/       # Captura/simulación de sensores (entrada)
+    │   ├── procesamiento/     # Lógica de interpretación y análisis
+    │   ├── almacenamiento/    # Base de datos / histórico
+    │   └── alertas/           # Detección de condiciones y alertas
+    ├── frontend/
+    │   └── visualizacion/     # Interfaz de visualización
+    ├── docs/                  # Documentación, talleres, esquemas
+    ├── tests/                 # Pruebas
     ├── requirements.txt
     └── README.md
 
@@ -98,7 +110,7 @@ Flujo diario de trabajo:
 1. Hacer commits pequeños y descriptivos.
 2. Al terminar un avance, abrir un Pull Request de tu rama hacia **`develop`** (no hacia `main`).
 3. `develop` se fusiona hacia `main` solo cuando el sistema integrado funciona de punta a punta (por ejemplo, antes de cada entrega del taller).
-4. No hacer `push` directo a `main` ni a `develop`.
+4. No hacer `push` directo a `main` ni a `develop` (la rama `develop` está protegida y requiere Pull Request con aprobación).
 
 ## Métricas a medir
 
