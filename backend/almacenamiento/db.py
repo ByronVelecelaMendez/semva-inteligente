@@ -10,6 +10,7 @@ otra base de datos más adelante si el proyecto lo requiere).
 
 import sqlite3
 import os
+import csv
 from datetime import datetime
 
 DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "semva.db")
@@ -71,3 +72,33 @@ def obtener_historico(limite=20):
     finally:
         if conexion:
             conexion.close()
+
+
+def exportar_historico_csv(nombre_archivo="historico_semva.csv"):
+    """Exporta todo el histórico de lecturas a un archivo CSV."""
+    inicializar_db()
+    conexion = None
+    try:
+        conexion = sqlite3.connect(DB_PATH)
+        cursor = conexion.cursor()
+        cursor.execute("SELECT temperatura, fecha_hora FROM lecturas ORDER BY id ASC")
+        filas = cursor.fetchall()
+
+        ruta_salida = os.path.join(os.path.dirname(os.path.abspath(__file__)), nombre_archivo)
+        with open(ruta_salida, mode="w", newline="", encoding="utf-8") as archivo_csv:
+            escritor = csv.writer(archivo_csv)
+            escritor.writerow(["temperatura_C", "fecha_hora"])
+            escritor.writerows(filas)
+
+        print(f"[Almacenamiento] Histórico exportado a: {ruta_salida} ({len(filas)} registros)")
+        return ruta_salida
+    except (sqlite3.Error, OSError) as error:
+        print(f"[Almacenamiento] Error al exportar el histórico: {error}")
+        return None
+    finally:
+        if conexion:
+            conexion.close()
+
+
+if __name__ == "__main__":
+    exportar_historico_csv()
