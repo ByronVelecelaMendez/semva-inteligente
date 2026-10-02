@@ -11,7 +11,7 @@ otra base de datos más adelante si el proyecto lo requiere).
 import sqlite3
 import os
 import csv
-from datetime import datetime
+from datetime import datetime, timedelta
 
 DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "semva.db")
 
@@ -95,6 +95,29 @@ def exportar_historico_csv(nombre_archivo="historico_semva.csv"):
     except (sqlite3.Error, OSError) as error:
         print(f"[Almacenamiento] Error al exportar el histórico: {error}")
         return None
+    finally:
+        if conexion:
+            conexion.close()
+
+
+def limpiar_historico_antiguo(dias=30):
+    """Elimina lecturas con más de `dias` de antigüedad, para evitar que la
+    base de datos crezca sin control (ver Taller 1.2: riesgo de saturación
+    de almacenamiento)."""
+    inicializar_db()
+    conexion = None
+    try:
+        conexion = sqlite3.connect(DB_PATH)
+        cursor = conexion.cursor()
+        fecha_limite = (datetime.now() - timedelta(days=dias)).isoformat()
+        cursor.execute("DELETE FROM lecturas WHERE fecha_hora < ?", (fecha_limite,))
+        conexion.commit()
+        eliminados = cursor.rowcount
+        print(f"[Almacenamiento] Registros eliminados (más de {dias} días): {eliminados}")
+        return eliminados
+    except sqlite3.Error as error:
+        print(f"[Almacenamiento] Error al limpiar el histórico: {error}")
+        return 0
     finally:
         if conexion:
             conexion.close()
