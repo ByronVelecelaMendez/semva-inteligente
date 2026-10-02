@@ -1,5 +1,5 @@
-"""
-Módulo de visualización (salida).
+﻿"""
+Módulo de visualización (frontend).
 
 Responsable: Integrante 4.
 
@@ -11,7 +11,8 @@ pantalla dedicada más adelante.
 import sys
 import os
 
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.append(os.path.join(ROOT, "backend"))
 
 from almacenamiento.db import obtener_historico
 
